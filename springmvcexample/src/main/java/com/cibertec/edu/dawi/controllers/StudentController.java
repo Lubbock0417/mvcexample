@@ -1,4 +1,4 @@
-/*package com.cibertec.edu.dawi.controllers;
+package com.cibertec.edu.dawi.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,21 +24,16 @@ import com.cibertec.edu.dawi.services.StudentServiceImpl;
 
 import net.sf.jasperreports.engine.JRException;
 
-
-
 @Controller
-@RequestMapping("/home")
-public class IndexController {
-	
+@RequestMapping(value = "/estudiante")
+public class StudentController {
+
 	@Autowired
 	private StudentServiceImpl studentService;
-	
-	@Value("${index.titulo.text}")
-	private String title;
-	
+		
 	@GetMapping({"/index","/", "","/home"})
 	public String index(Model model) {
-		model.addAttribute("titulo",title);
+		model.addAttribute("titulo","JASPER REPORT + SPRING BOOT");
 		return "index";
 	}
 	
@@ -47,4 +42,21 @@ public class IndexController {
 		List<Student> estudiantes= studentService.getAllStudents();
 		return estudiantes;
 	}
-}*/
+	
+	@GetMapping(value = "/reporte", produces = MediaType.APPLICATION_PDF_VALUE)
+	public ResponseEntity<byte[]> reporteEstudiantes(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, JRException {
+	    try {
+	        InputStream report = this.studentService.getReportStudents();
+	        byte[] data = report.readAllBytes();
+	        report.close();
+	        HttpHeaders header = new HttpHeaders();
+	        header.setContentType(MediaType.APPLICATION_PDF);
+	        header.set(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"reporte_estudiantes.pdf\"");
+	        header.setContentLength(data.length);
+	        return new ResponseEntity<byte[]>(data,header,HttpStatus.CREATED);	      
+	    } catch (IOException ex) {
+	        throw new RuntimeException("IOError retornando archivo");
+	    }
+	}
+}

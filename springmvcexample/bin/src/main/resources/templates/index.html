@@ -9,9 +9,9 @@
 <body th:onload = "clock()">
 <h1 class="color-rojo" th:text="${titulo}"></h1>
 <h2 class="color-azul">HOLA ESTUDIANTES</h2>
-<img th:src="@{/iamges/spring.png"></img>
+<img th:src="@{/images/spring.png}"></img>
 <div th:if="${estudiantes.isEmpty()}">No hay usuarios en la lista</div>
-	<table th:if="${not estudiantes.isEmpty()}">
+	<table th:if="${!estudiantes.isEmpty()}">
 	<thead>
 		<tr>
 			<th>Nombre</th>
@@ -20,15 +20,15 @@
 			<th>Año ingreso</th>
 		</tr>
 	</thead>
-		<tr th:head="estudiante:${estudiantes}">
+	<tbody>
+		<tr th:each="estudiante:${estudiantes}">
 			<td th:text="${estudiante.nombre}"></td>
 			<td th:text="${estudiante.dni}"></td>
 			<td th:text="${estudiante.codigo}"></td>
 			<td th:text="${estudiante.anioIngreso}"></td>
 		</tr>
-	<tbody>
 	</tbody>
 	</table>
 </body>
 </html>
-<script type="text/javascript" th:src="@{/js/main.js"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
